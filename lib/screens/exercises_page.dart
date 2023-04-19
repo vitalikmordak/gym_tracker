@@ -13,11 +13,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
     return ListView(
       padding: EdgeInsets.all(20.0),
       children: [
-        TextField(
-          onChanged: (value){//TODO: add search
-             },
-          decoration: InputDecoration(hintText: 'Search')
-        ),
         Text('Biceps curl'),
         Text('Triceps curl'),
         Text('Abs'),
