@@ -27,18 +27,36 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green.shade400),
               onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return CloseAlertDialog(
-                        title: 'Cancel Workout?',
-                        content:
-                            'Are you sure you want to cancel this workout? \nAll progress will be lost.',
-                        cancelButtonText: 'Cancel Workout',
-                        resumeButtonText: 'Resume',
-                        cancelAction: () => _workoutRunning = false,
-                      );
-                    });
+                if (setByExercise.isEmpty) {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return CloseAlertDialog(
+                          title: 'Cancel Workout?',
+                          content:
+                              'Are you sure you want to cancel this workout? \nAll progress will be lost.',
+                          actionButtonText: 'Cancel Workout',
+                          resumeButtonText: 'Resume',
+                          actionButtonStyle: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.redAccent,
+                          ),
+                        );
+                      });
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return CloseAlertDialog(
+                          title: '💪',
+                          content: 'Finish Workout?',
+                          actionButtonText: 'Finish',
+                          resumeButtonText: 'Cancel',
+                          actionButtonStyle: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green.shade400,
+                          ),
+                        );
+                      });
+                }
               },
             ),
           ]),
@@ -59,7 +77,8 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
                           _selectedExercises[index], () => []);
                       return ExpansionTile(
                           maintainState: true,
-                          expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
+                          expandedCrossAxisAlignment:
+                              CrossAxisAlignment.stretch,
                           title: Text(_selectedExercises[index]),
                           children: [
                             Row(
@@ -85,21 +104,19 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
                               ],
                             ),
                             Column(
-                              children: setByExercise[_selectedExercises[index]] ?? [],
+                              children:
+                                  setByExercise[_selectedExercises[index]] ??
+                                      [],
                             ),
                             ElevatedButton(
                                 onPressed: () {
                                   setState(() {
-                                    if (setByExercise[
-                                            _selectedExercises[index]] !=
-                                        null) {
-                                      setByExercise[_selectedExercises[index]]!
-                                          .add(ExerciseSetComponent(
-                                              setNumber: setByExercise[
-                                                          _selectedExercises[
-                                                              index]]!
-                                                      .length +
-                                                  1));
+                                    var listOfExerciseSets = setByExercise[
+                                        _selectedExercises[index]];
+                                    if (listOfExerciseSets != null) {
+                                      listOfExerciseSets.add(
+                                          ExerciseSetComponent(
+                                              setNumber: listOfExerciseSets.length + 1));
                                     }
                                   });
                                 },

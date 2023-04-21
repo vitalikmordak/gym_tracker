@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 
+const defaultResumeButtonBackgroundColor = Color(0xFF9E9E9E); //grey.shade500
+
 class CloseAlertDialog extends StatelessWidget {
   const CloseAlertDialog(
       {super.key,
       required this.title,
       this.content = '',
-      required this.cancelButtonText,
+      required this.actionButtonText,
       required this.resumeButtonText,
-      this.cancelAction});
+      this.actionButtonOnPressed,
+      this.actionButtonStyle,
+      this.resumeButtonStyle});
 
   final String title;
   final String content;
-  final String cancelButtonText;
+  final String actionButtonText;
   final String resumeButtonText;
-  final Function? cancelAction;
+  final Function? actionButtonOnPressed;
+  final ButtonStyle? actionButtonStyle;
+  final ButtonStyle? resumeButtonStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -33,22 +39,20 @@ class CloseAlertDialog extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.redAccent,
-            ),
+            style: actionButtonStyle,
             onPressed: () {
+              actionButtonOnPressed;
               // Close firstly alert dialog, then bottom modal sheet
               Navigator.pop(context);
               Navigator.pop(context);
             },
-            child: Text(cancelButtonText),
+            child: Text(actionButtonText),
           ),
         ),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green.shade400),
+            style: resumeButtonStyle ?? ElevatedButton.styleFrom(backgroundColor: defaultResumeButtonBackgroundColor),
             onPressed: () =>
                 // close only alert dialog
                 Navigator.pop(context),
