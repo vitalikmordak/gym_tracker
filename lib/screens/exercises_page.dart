@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gym_tracker/screens/current_workout_bottom_sheet_page.dart';
 import 'package:gym_tracker/screens/exercise_category_page.dart';
 import 'package:gym_tracker/storage/in_memory_storage.dart';
 import 'package:gym_tracker/vo/excercise.dart';

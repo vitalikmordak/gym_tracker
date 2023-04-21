@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gym_tracker/screens/current_workout_bottom_sheet_page.dart';
+import 'package:gym_tracker/screens/current_workout_page.dart';
 
 class StartWorkoutPage extends StatefulWidget {
   const StartWorkoutPage({Key? key}) : super(key: key);
