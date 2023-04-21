@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/components/close_alert_dialog.dart';
+import 'package:gym_tracker/components/exercise_set_component.dart';
 import 'package:gym_tracker/screens/exercises_page.dart';
 
 class CurrentWorkoutPage extends StatefulWidget {
@@ -12,6 +13,7 @@ class CurrentWorkoutPage extends StatefulWidget {
 class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
   bool _workoutRunning = true;
   List<String> _selectedExercises = [];
+  Map<String, List<Widget>> setByExercise = {};
 
   @override
   Widget build(BuildContext context) {
@@ -45,21 +47,67 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            _selectedExercises.isEmpty
-                ? SizedBox(
-                    height: 25.0,
-                  )
-                : Expanded(
-                    child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: _selectedExercises.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(_selectedExercises[index]),
-                          );
-                        }),
-                  ),
+            Visibility(
+              visible: _selectedExercises.isNotEmpty,
+              child: Expanded(
+                child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: _selectedExercises.length,
+                    itemBuilder: (context, index) {
+                      setByExercise.putIfAbsent(
+                          _selectedExercises[index], () => []);
+                      return ExpansionTile(
+                          maintainState: true,
+                          expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
+                          title: Text(_selectedExercises[index]),
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: const [
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                SizedBox(
+                                    width: 150,
+                                    child: Text(
+                                      'WEIGHT',
+                                      style: TextStyle(color: Colors.grey),
+                                      textAlign: TextAlign.center,
+                                    )),
+                                SizedBox(
+                                    width: 150,
+                                    child: Text(
+                                      'REPS',
+                                      style: TextStyle(color: Colors.grey),
+                                      textAlign: TextAlign.center,
+                                    ))
+                              ],
+                            ),
+                            Column(
+                              children: setByExercise[_selectedExercises[index]] ?? [],
+                            ),
+                            ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    if (setByExercise[
+                                            _selectedExercises[index]] !=
+                                        null) {
+                                      setByExercise[_selectedExercises[index]]!
+                                          .add(ExerciseSetComponent(
+                                              setNumber: setByExercise[
+                                                          _selectedExercises[
+                                                              index]]!
+                                                      .length +
+                                                  1));
+                                    }
+                                  });
+                                },
+                                child: Text('+ Add Set'))
+                          ]);
+                    }),
+              ),
+            ),
             ElevatedButton(
               onPressed: () async {
                 List<String> selectedUserExercises = await Navigator.push(
