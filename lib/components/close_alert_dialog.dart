@@ -33,7 +33,7 @@ class CloseAlertDialog extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
       ),
-      actionsPadding: EdgeInsets.all(30.0),
+      actionsPadding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
       actionsOverflowDirection: VerticalDirection.down,
       actions: [
         SizedBox(
