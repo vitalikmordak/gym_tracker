@@ -44,9 +44,6 @@ class _BottomNavigatorBarState extends State<BottomNavigatorBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Gym Tracker'),
-      ),
       body: Center(
         child: _pages.elementAt(_selectedIndex),
       ),
