@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/screens/current_workout_page.dart';
 import 'package:intl/intl.dart';
+import 'package:gym_tracker/constants.dart' as constants;
 
 class StartWorkoutPage extends StatefulWidget {
   const StartWorkoutPage({Key? key}) : super(key: key);
@@ -18,9 +19,9 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Start Workout'),
-        foregroundColor: Colors.black87,
-        backgroundColor: CupertinoColors.systemBackground,
-        elevation: 0.8,
+        foregroundColor: constants.appBarForegroundColor,
+        backgroundColor: constants.appBarBackgroundColor,
+        elevation: constants.appBarElevation,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,

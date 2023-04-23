@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gym_tracker/screens/exercise_category_page.dart';
 import 'package:gym_tracker/storage/in_memory_storage.dart';
 import 'package:gym_tracker/vo/excercise.dart';
+import 'package:gym_tracker/constants.dart' as constants;
 
 class ExercisesPage extends StatefulWidget {
   const ExercisesPage({Key? key, this.selectExercise = false})
@@ -24,6 +25,9 @@ class _ExercisesPageState extends State<ExercisesPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Exercises'),
+        foregroundColor: constants.appBarForegroundColor,
+        backgroundColor: constants.appBarBackgroundColor,
+        elevation: constants.appBarElevation,
       ),
       floatingActionButton: Visibility(
         visible: widget.selectExercise,

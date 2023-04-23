@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/components/swipable_indicator.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:gym_tracker/constants.dart' as constants;
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({Key? key}) : super(key: key);
@@ -17,10 +18,13 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('History')),
+      appBar: AppBar(title: Text('History'),
+        foregroundColor: constants.appBarForegroundColor,
+        backgroundColor: constants.appBarBackgroundColor,
+        elevation: constants.appBarElevation,),
       body: Column(
         children: [
-          //todo: change style of AppBar and Calendar
+          //todo: change Calendar style
           Container(
             decoration: BoxDecoration(
               color: Colors.white,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gym_tracker/constants.dart' as constants;
 
 class ExerciseCategoryPage extends StatefulWidget {
   const ExerciseCategoryPage(
@@ -22,12 +23,18 @@ class _ExerciseCategoryPageState extends State<ExerciseCategoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: !widget.selectExercise),
+      appBar: AppBar(
+        automaticallyImplyLeading: !widget.selectExercise,
+        foregroundColor: constants.appBarForegroundColor,
+        backgroundColor: constants.appBarBackgroundColor,
+        elevation: constants.appBarElevation,
+      ),
       floatingActionButton: Visibility(
         visible: widget.selectExercise,
         child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0)),
+                padding:
+                    EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0)),
             icon: Icon(Icons.keyboard_backspace_rounded),
             label: Text('Select: ${_selectedExercise.length}'),
             onPressed: () {
