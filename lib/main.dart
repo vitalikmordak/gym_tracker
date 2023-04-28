@@ -1,8 +1,13 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/screens/exercises_page.dart';
 import 'package:gym_tracker/screens/history_page.dart';
 import 'package:gym_tracker/screens/start_workout_page.dart';
+import 'package:gym_tracker/services/exercise_model.dart';
+import 'package:gym_tracker/services/networking_client.dart';
+import 'package:gym_tracker/storage/in_memory_storage.dart';
 
 void main() {
   runApp(GymTracker());
@@ -28,6 +33,26 @@ class BottomNavigatorBar extends StatefulWidget {
 
 class _BottomNavigatorBarState extends State<BottomNavigatorBar> {
   int _selectedIndex = 1; // default is page in center
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
+
+  _fetchData() async {
+    var uri = Uri.http("localhost:8080", "/api/v1/exercises");
+    NetworkClient client = NetworkClient(uri);
+    String response = await client.getData();
+
+    List parsed = jsonDecode(response);
+    List<ExerciseModel> exercises =
+        parsed.map((e) => ExerciseModel.fromJson(e)).toList();
+    setState(() {
+        InMemoryStorage.exercisesByGroup =
+            groupBy(exercises, (ExerciseModel em) => ExerciseModel.capitalize(em.groupName));
+    });
+  }
 
   static const List<Widget> _pages = <Widget>[
     HistoryPage(),
@@ -68,4 +93,3 @@ class _BottomNavigatorBarState extends State<BottomNavigatorBar> {
     );
   }
 }
-

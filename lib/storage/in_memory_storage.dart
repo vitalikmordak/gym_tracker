@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gym_tracker/services/exercise_model.dart';
 import 'package:gym_tracker/vo/excercise.dart';
 import 'package:gym_tracker/vo/excercise_category.dart';
 
@@ -62,5 +63,7 @@ class InMemoryStorage {
         exercises: coreExercises,
         categoryIcon: AssetImage('assets/exercise_icons/icons8-prelum-100.png')));
   }
+
+  static Map<String, List<ExerciseModel>> exercisesByGroup = {};
 
 }

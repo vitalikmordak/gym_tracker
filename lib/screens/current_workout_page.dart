@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gym_tracker/components/close_alert_dialog.dart';
 import 'package:gym_tracker/components/exercise_set_component.dart';
 import 'package:gym_tracker/screens/exercises_page.dart';
+import 'package:gym_tracker/services/exercise_model.dart';
 
 class CurrentWorkoutPage extends StatefulWidget {
   const CurrentWorkoutPage({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class CurrentWorkoutPage extends StatefulWidget {
 
 class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
   bool _workoutRunning = true;
-  List<String> _selectedExercises = [];
+  List<ExerciseModel> _selectedExercises = [];
   Map<String, List<Widget>> setByExercise = {};
 
   @override
@@ -74,12 +75,12 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
                     itemCount: _selectedExercises.length,
                     itemBuilder: (context, index) {
                       setByExercise.putIfAbsent(
-                          _selectedExercises[index], () => []);
+                          _selectedExercises[index].name, () => []);
                       return ExpansionTile(
                           maintainState: true,
                           expandedCrossAxisAlignment:
                               CrossAxisAlignment.stretch,
-                          title: Text(_selectedExercises[index]),
+                          title: Text(_selectedExercises[index].name),
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -104,19 +105,21 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
                               ],
                             ),
                             Column(
-                              children:
-                                  setByExercise[_selectedExercises[index]] ??
-                                      [],
+                              children: setByExercise[
+                                      _selectedExercises[index].name] ??
+                                  [],
                             ),
                             ElevatedButton(
                                 onPressed: () {
                                   setState(() {
                                     var listOfExerciseSets = setByExercise[
-                                        _selectedExercises[index]];
+                                        _selectedExercises[index].name];
                                     if (listOfExerciseSets != null) {
                                       listOfExerciseSets.add(
                                           ExerciseSetComponent(
-                                              setNumber: listOfExerciseSets.length + 1));
+                                              setNumber:
+                                                  listOfExerciseSets.length +
+                                                      1));
                                     }
                                   });
                                 },
@@ -127,16 +130,17 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                List<String> selectedUserExercises = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ExercisesPage(
-                              selectExercise: true,
-                            )));
+                List<ExerciseModel> selectedUserExercises =
+                    await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ExercisesPage(
+                                  selectExercise: true,
+                                )));
 
                 if (selectedUserExercises.isNotEmpty) {
                   setState(() {
-                    _selectedExercises = selectedUserExercises;
+                    _selectedExercises.addAll(selectedUserExercises);
                     print(_selectedExercises);
                   });
                 }

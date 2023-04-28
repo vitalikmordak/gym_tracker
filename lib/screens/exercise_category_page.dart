@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/constants.dart' as constants;
+import 'package:gym_tracker/services/exercise_model.dart';
 
 class ExerciseCategoryPage extends StatefulWidget {
   const ExerciseCategoryPage(
@@ -10,15 +11,18 @@ class ExerciseCategoryPage extends StatefulWidget {
       : super(key: key);
 
   final bool selectExercise;
-  final List<String> categoryExercises;
+  final List<ExerciseModel> categoryExercises;
   final AssetImage categoryIcon;
-
+//todo: need to provide for this page exercise
+// which already selected for particular category
+// if we turn back to select/unselect exercises.
   @override
   State<ExerciseCategoryPage> createState() => _ExerciseCategoryPageState();
 }
 
 class _ExerciseCategoryPageState extends State<ExerciseCategoryPage> {
-  Map<int, String> _selectedExercise = {};
+
+  Map<int, ExerciseModel> _selectedExercise = {};
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +52,7 @@ class _ExerciseCategoryPageState extends State<ExerciseCategoryPage> {
           return ListTile(
             contentPadding:
                 EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-            title: Text(widget.categoryExercises[index],
+            title: Text(widget.categoryExercises[index].name,
                 style: TextStyle(fontSize: 20.0)),
             leading: Image(
               height: 100,
