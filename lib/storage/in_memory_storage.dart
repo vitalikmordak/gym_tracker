@@ -65,5 +65,10 @@ class InMemoryStorage {
   }
 
   static Map<String, List<ExerciseModel>> exercisesByGroup = {};
+  static List<String> getExerciseCategories() {
+    return exercisesByGroup.keys.toList();
+  }
+
+  static List<String> setTypes = [];
 
 }
