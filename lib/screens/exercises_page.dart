@@ -1,43 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/constants.dart' as constants;
-import 'package:gym_tracker/screens/exercise_category_page.dart';
 import 'package:gym_tracker/services/exercise_model.dart';
-import 'package:gym_tracker/storage/in_memory_storage.dart';
 
 class ExercisesPage extends StatefulWidget {
-  const ExercisesPage({Key? key, this.selectExercise = false})
+  const ExercisesPage(
+      {Key? key,
+      required this.selectExercise,
+      required this.categoryExercises,
+      required this.categoryIcon})
       : super(key: key);
 
   final bool selectExercise;
-
+  final List<ExerciseModel> categoryExercises;
+  final AssetImage categoryIcon;
+//todo: need to provide for this page exercise
+// which already selected for particular category
+// if we turn back to select/unselect exercises.
   @override
   State<ExercisesPage> createState() => _ExercisesPageState();
 }
 
 class _ExercisesPageState extends State<ExercisesPage> {
-  Map<String, int> selectedExerciseNumberPerCategory = {};
-  Map<String, List<ExerciseModel>> selectedExercisesPerCategory = {};
-  List<ExerciseModel> _selectedExercises = [];
-  late Map<String, List<ExerciseModel>> exercisesGroups;
-  InMemoryStorage storage = InMemoryStorage();
-  bool _isLoading = true;
 
-  @override
-  void initState() {
-    super.initState();
-    exercisesGroups = InMemoryStorage.exercisesByGroup;
-    setState(() {
-      if (exercisesGroups.isNotEmpty) {
-        _isLoading = false;
-      }
-    });
-  }
+  Map<int, ExerciseModel> _selectedExercise = {};
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Exercises'),
+        automaticallyImplyLeading: !widget.selectExercise,
         foregroundColor: constants.appBarForegroundColor,
         backgroundColor: constants.appBarBackgroundColor,
         elevation: constants.appBarElevation,
@@ -49,78 +40,50 @@ class _ExercisesPageState extends State<ExercisesPage> {
                 padding:
                     EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0)),
             icon: Icon(Icons.keyboard_backspace_rounded),
-            label: Text(
-                'Select: ${selectedExerciseNumberPerCategory.values.fold(0, (a, b) => a + b)}'),
+            label: Text('Select: ${_selectedExercise.length}'),
             onPressed: () {
-              Navigator.pop(context, _selectedExercises);
+              Navigator.pop(context, _selectedExercise.values.toList());
             }),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : ListView.builder(
-              itemCount: exercisesGroups.keys.length,
-              itemBuilder: (context, index) {
-                String _categoryName = exercisesGroups.keys.elementAt(index);
-                // AssetImage _categoryIcon = storage.categories[index].categoryIcon;
-                AssetImage _categoryIcon =
-                    AssetImage('assets/exercise_icons/icons8-biceps-100.png');
-                List<ExerciseModel> _categoryExercises =
-                    exercisesGroups[_categoryName] as List<ExerciseModel>;
-                return ListTile(
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-                  title: Text(_categoryName, style: TextStyle(fontSize: 20.0)),
-                  leading: Image(height: 100, image: _categoryIcon),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                          !selectedExerciseNumberPerCategory
-                                  .containsKey(_categoryName)
-                              ? '${_categoryExercises.length}'
-                              : 'Selected: ${selectedExerciseNumberPerCategory[_categoryName]}',
-                          style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w700)),
-                      SizedBox(
-                        width: 10.0,
-                      ),
-                      Icon(
-                        Icons.chevron_right_rounded,
-                        color: Colors.grey,
-                        size: 30.0,
-                      ),
-                    ],
-                  ),
-                  onTap: () async {
-                    List<ExerciseModel>? selectedExercises = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            //todo: propagate selected if exist to ExerciseCategoryPage to have select/unselect ability
-                            builder: (context) => ExerciseCategoryPage(
-                                  categoryIcon: _categoryIcon,
-                                  selectExercise: widget.selectExercise,
-                                  categoryExercises: _categoryExercises,
-                                )));
-                    if (selectedExercises != null &&
-                        selectedExercises.isNotEmpty) {
-                      setState(() {
-                        selectedExerciseNumberPerCategory[_categoryName] =
-                            selectedExercises.length;
-                        _selectedExercises.addAll(selectedExercises);
-                      });
-                    } else {
-                      setState(() {
-                        selectedExerciseNumberPerCategory.remove(_categoryName);
-                      });
-                    }
-                  },
-                );
-              }),
+      body: ListView.builder(
+        itemCount: widget.categoryExercises.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            contentPadding:
+        EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+            title: Text(widget.categoryExercises[index].name,
+        style: TextStyle(fontSize: 20.0)),
+            leading: Image(
+      height: 100,
+      image: widget.categoryIcon,
+            ),
+            onTap: () {
+      setState(() {
+        if (widget.selectExercise) {
+          if (_selectedExercise.containsKey(index)) {
+      _selectedExercise.remove(index);
+          } else {
+      _selectedExercise.putIfAbsent(
+        index,
+        () => widget.categoryExercises[index],
+      );
+          }
+        }
+      });
+            },
+            trailing: Visibility(
+      visible:
+          widget.selectExercise && _selectedExercise.containsKey(index),
+      child: Icon(
+        Icons.check,
+        size: 30.0,
+        color: Colors.lightBlueAccent,
+      ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

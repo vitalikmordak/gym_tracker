@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/components/close_alert_dialog.dart';
 import 'package:gym_tracker/components/exercise_set_component.dart';
-import 'package:gym_tracker/screens/exercises_page.dart';
+import 'package:gym_tracker/components/padding_elevated_button.dart';
+import 'package:gym_tracker/constants.dart' as constants;
+import 'package:gym_tracker/screens/exercise_categories_page.dart';
 import 'package:gym_tracker/services/exercise_model.dart';
 
 class CurrentWorkoutPage extends StatefulWidget {
@@ -21,45 +23,51 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
     return Scaffold(
       appBar: AppBar(
           title: Text('Current Workout'),
+          foregroundColor: constants.appBarForegroundColor,
+          backgroundColor: constants.appBarBackgroundColor,
+          elevation: constants.appBarElevation,
           automaticallyImplyLeading: false,
           actions: [
-            ElevatedButton(
-              child: Text('Finish'),
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green.shade400),
-              onPressed: () {
-                if (setByExercise.isEmpty) {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return CloseAlertDialog(
-                          title: 'Cancel Workout?',
-                          content:
-                              'Are you sure you want to cancel this workout? \nAll progress will be lost.',
-                          actionButtonText: 'Cancel Workout',
-                          resumeButtonText: 'Resume',
-                          actionButtonStyle: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.redAccent,
-                          ),
-                        );
-                      });
-                } else {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return CloseAlertDialog(
-                          title: '💪',
-                          content: 'Finish Workout?',
-                          actionButtonText: 'Finish',
-                          resumeButtonText: 'Cancel',
-                          actionButtonStyle: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green.shade400,
-                          ),
-                        );
-                      });
-                }
-              },
-            ),
+            TextButton(
+                onPressed: () {
+                  if (setByExercise.isEmpty) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CloseAlertDialog(
+                            title: 'Cancel Workout?',
+                            content:
+                                'Are you sure you want to cancel this workout? \nAll progress will be lost.',
+                            actionButtonText: 'Cancel Workout',
+                            resumeButtonText: 'Resume',
+                            actionButtonStyle: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.redAccent,
+                            ),
+                          );
+                        });
+                  } else {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CloseAlertDialog(
+                            title: '💪',
+                            content: 'Finish Workout?',
+                            actionButtonText: 'Finish',
+                            resumeButtonText: 'Cancel',
+                            actionButtonStyle: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green.shade400,
+                            ),
+                          );
+                        });
+                  }
+                },
+                style: TextButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                    foregroundColor: Colors.green.shade400),
+                child: const Text(
+                  'Finish',
+                  style: TextStyle(fontSize: 18),
+                )),
           ]),
       body: SafeArea(
         child: Column(
@@ -128,13 +136,13 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
                     }),
               ),
             ),
-            ElevatedButton(
+            PaddingElevatedButton(
               onPressed: () async {
                 List<ExerciseModel> selectedUserExercises =
                     await Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ExercisesPage(
+                            builder: (context) => const ExerciseCategoriesPage(
                                   selectExercise: true,
                                 )));
 
@@ -145,13 +153,13 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
                   });
                 }
               },
-              child: Text('Add Exercises'),
+              label: 'Add Exercises',
             ),
-            ElevatedButton(
+            PaddingElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Cancel Workout'),
+              label: 'Cancel Workout',
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.redAccent,
               ),

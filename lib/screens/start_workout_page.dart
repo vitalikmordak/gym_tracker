@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gym_tracker/components/padding_elevated_button.dart';
 import 'package:gym_tracker/screens/current_workout_page.dart';
 import 'package:intl/intl.dart';
 import 'package:gym_tracker/constants.dart' as constants;
@@ -39,18 +40,14 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
             ),
           ),
           const Expanded(child: SizedBox()),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: ElevatedButton(
-              child: Text('Start Workout'),
+          PaddingElevatedButton(
+              label: 'Start Workout',
               onPressed: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => CurrentWorkoutPage()));
-              },
-            ),
-          ),
+              }),
           const Expanded(child: SizedBox()),
         ],
       ),

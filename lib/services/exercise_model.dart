@@ -41,7 +41,6 @@ class ExerciseModel {
   Map<String, dynamic> toJson() => {
     "id": id,
     "name": name,
-    "createdBySystem": createdBySystem,
     "doubleWeights": doubleWeights,
     "bodyWeight": bodyWeight,
     "setCategoryType": setCategoryType,

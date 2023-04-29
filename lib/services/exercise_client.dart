@@ -18,7 +18,6 @@ class ExerciseClient {
 
     List parsed = jsonDecode(response);
     List<ExerciseModel> exercises = parsed.map((e) => ExerciseModel.fromJson(e)).toList();
-    Map<String, List<ExerciseModel>> groupBy2 = groupBy(exercises, (ExerciseModel em)=> em.groupName);
-    InMemoryStorage.exercisesByGroup = groupBy2;
+    InMemoryStorage.exercisesByGroup = groupBy(exercises, (ExerciseModel em)=> em.groupName);
   }
 }
