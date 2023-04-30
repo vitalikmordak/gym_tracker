@@ -14,8 +14,8 @@ class CurrentWorkoutPage extends StatefulWidget {
 }
 
 class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
-  bool _workoutRunning = true;
-  List<ExerciseModel> _selectedExercises = [];
+  final List<ExerciseModel> _selectedExercises = [];
+  Map<String, List<ExerciseModel>> _selectedExercisesPerCategory = {};
   Map<String, List<Widget>> setByExercise = {};
 
   @override
@@ -138,18 +138,29 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
             ),
             PaddingElevatedButton(
               onPressed: () async {
-                List<ExerciseModel> selectedUserExercises =
-                    await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ExerciseCategoriesPage(
-                                  selectExercise: true,
-                                )));
+                _selectedExercisesPerCategory = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ExerciseCategoriesPage(
+                              selectExercise: true,
+                              selectedExercisesPerCategory:
+                                  _selectedExercisesPerCategory,
+                            )));
 
-                if (selectedUserExercises.isNotEmpty) {
+                if (_selectedExercisesPerCategory.isNotEmpty) {
                   setState(() {
-                    _selectedExercises.addAll(selectedUserExercises);
-                    print(_selectedExercises);
+                    List<ExerciseModel> selectedUserExercises =
+                        _selectedExercisesPerCategory.values
+                            .expand((element) => element)
+                            .toList();
+                    var newSelectedExercises = selectedUserExercises.where(
+                        (element) => !_selectedExercises.contains(element));
+
+                    /// Add to current workout newly selected exercises even it happens during workout
+                    /// Delete if some exercises were deselected.
+                    _selectedExercises.addAll(newSelectedExercises);
+                    _selectedExercises.removeWhere(
+                        (element) => !selectedUserExercises.contains(element));
                   });
                 }
               },

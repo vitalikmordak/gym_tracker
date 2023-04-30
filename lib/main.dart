@@ -34,10 +34,11 @@ class _BottomNavigatorBarState extends State<BottomNavigatorBar> {
     super.initState();
     DataFetcher.fetchAll();
   }
-
-  static const List<Widget> _pages = <Widget>[
-    HistoryPage(),
-    StartWorkoutPage(),
+  //todo: add i18n for at least English and Ukrainian
+  //todo: add page/settings profile to select language, maybe units
+  static final List<Widget> _pages = <Widget>[
+    const HistoryPage(),
+    const StartWorkoutPage(),
     ExerciseCategoriesPage()
   ];
 
