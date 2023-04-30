@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 class ExerciseModel {
-  final String id;
+  final String? id;
   final String name;
   final bool createdBySystem;
   final bool doubleWeights;
@@ -13,9 +13,9 @@ class ExerciseModel {
   final String groupName;
 
   ExerciseModel({
-    required this.id,
+    this.id,
     required this.name,
-    required this.createdBySystem,
+    this.createdBySystem = false,
     required this.doubleWeights,
     required this.bodyWeight,
     required this.setCategoryType,
@@ -43,9 +43,9 @@ class ExerciseModel {
     "name": name,
     "doubleWeights": doubleWeights,
     "bodyWeight": bodyWeight,
-    "setCategoryType": setCategoryType,
+    "setCategoryType": setCategoryType.toUpperCase().replaceAll(" ", "_"),
     "createdBy": createdBy,
-    "groupName": groupName,
+    "groupName": groupName.toUpperCase().replaceAll(" ", "_"),
   };
 
   static String capitalize(String s) {

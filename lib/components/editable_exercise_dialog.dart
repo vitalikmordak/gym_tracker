@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gym_tracker/components/switched_choice.dart';
+import 'package:gym_tracker/services/exercise_client.dart';
+import 'package:gym_tracker/services/exercise_model.dart';
 import 'package:gym_tracker/storage/in_memory_storage.dart';
 
 const inputFieldContentPadding =
@@ -8,8 +11,9 @@ class EditableExerciseDialog extends StatefulWidget {
   final String titleText;
   final String? initialCategory;
   final String? initialSetType;
+  final Future<void> Function() applyOnSuccess;
 
-  const EditableExerciseDialog(
+  const EditableExerciseDialog(this.applyOnSuccess,
       {Key? key,
       required this.titleText,
       this.initialCategory,
@@ -21,14 +25,16 @@ class EditableExerciseDialog extends StatefulWidget {
 }
 
 class _EditableExerciseDialogState extends State<EditableExerciseDialog> {
-  String? _enteredName;
-  String? _selectedCategory;
-  String? _selectedSetType;
+  late String _enteredName;
+  late String _selectedCategory;
+  late String _selectedSetType;
+  bool _isDoubleWeights = false;
+  bool _isBodyWeight = false;
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    var exerciseCategories = InMemoryStorage.getExerciseCategories();
+    var exerciseCategories = InMemoryStorage.categories;
 
     return Dialog(
       shape: const RoundedRectangleBorder(
@@ -58,12 +64,25 @@ class _EditableExerciseDialogState extends State<EditableExerciseDialog> {
                     style: const TextStyle(fontWeight: FontWeight.w700),
                   ),
                   TextButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         //form is valid, proceed further
                         _formKey.currentState?.save();
+                        ExerciseClient().createExercise(
+                          ExerciseModel(
+                              name: _enteredName,
+                              doubleWeights: _isDoubleWeights,
+                              bodyWeight: _isBodyWeight,
+                              groupName: _selectedCategory,
+                              setCategoryType: _selectedSetType,
+                              createdBy:
+                                  'unknown' //todo: change when auth will be implemented
+                              ),
+                        );
                       }
-                      //todo: add logic to save on backend new/updated exercise
+                      await widget.applyOnSuccess.call();
+                      Navigator.pop(context);
+                      //todo: update logic to save on backend updated exercise
                     },
                     child: const Text('Save'),
                   ),
@@ -72,7 +91,7 @@ class _EditableExerciseDialogState extends State<EditableExerciseDialog> {
               TextFormField(
                 validator: (value) =>
                     value == null || value.isEmpty ? 'Name is required' : null,
-                onSaved: (value) => _enteredName = value,
+                onSaved: (value) => _enteredName = value!,
                 decoration: InputDecoration(
                   hintText: 'Add Name',
                   contentPadding: inputFieldContentPadding,
@@ -93,7 +112,7 @@ class _EditableExerciseDialogState extends State<EditableExerciseDialog> {
                 }).toList(),
                 onChanged: (newVal) {
                   setState(() {
-                    _selectedCategory = newVal;
+                    _selectedCategory = newVal!;
                   });
                 },
                 decoration: const InputDecoration(
@@ -112,7 +131,7 @@ class _EditableExerciseDialogState extends State<EditableExerciseDialog> {
                 }).toList(),
                 onChanged: (newVal) {
                   setState(() {
-                    _selectedSetType = newVal;
+                    _selectedSetType = newVal!;
                   });
                 },
                 decoration: const InputDecoration(
@@ -123,7 +142,34 @@ class _EditableExerciseDialogState extends State<EditableExerciseDialog> {
                     fillColor: Colors.white),
                 validator: (value) =>
                     value == null ? 'Exercise type is required' : null,
-              )
+              ),
+              SwitchedChoiceWithTooltip(
+                leadingText: 'Double Weights',
+                tooltipMessage:
+                    'For exercises with double weights (e.g. two dumbbells) specify the weight of just one, while tonnage statistics will be doubled.',
+                switchValue: _isDoubleWeights,
+                onChangeSwitchState: (value) {
+                  setState(() {
+                    _isDoubleWeights = value;
+                    if (_isBodyWeight) {
+                      _isBodyWeight = false;
+                    }
+                  });
+                },
+              ),
+              SwitchedChoiceWithTooltip(
+                  leadingText: 'Body Weight',
+                  tooltipMessage:
+                      'For bodyweight exercises(e.g. push-ups) repetition statistics will be displayed instead of tonnage.\n\nIf necessary, you can log any additional weight or leave the field blank.',
+                  switchValue: _isBodyWeight,
+                  onChangeSwitchState: (value) {
+                    setState(() {
+                      _isBodyWeight = value;
+                      if (_isDoubleWeights) {
+                        _isDoubleWeights = false;
+                      }
+                    });
+                  })
             ],
           ),
         ),

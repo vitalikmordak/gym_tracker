@@ -1,13 +1,8 @@
-import 'dart:convert';
-
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/screens/exercise_categories_page.dart';
 import 'package:gym_tracker/screens/history_page.dart';
 import 'package:gym_tracker/screens/start_workout_page.dart';
-import 'package:gym_tracker/services/exercise_model.dart';
-import 'package:gym_tracker/services/networking_client.dart';
-import 'package:gym_tracker/storage/in_memory_storage.dart';
+import 'package:gym_tracker/services/data_fetcher.dart';
 
 void main() {
   runApp(GymTracker());
@@ -37,30 +32,7 @@ class _BottomNavigatorBarState extends State<BottomNavigatorBar> {
   @override
   void initState() {
     super.initState();
-    _fetchData();
-  }
-
-  _fetchData() async {
-    //todo: refactoring it
-    var uri = Uri.http("localhost:8080", "/api/v1/exercises");
-    NetworkClient client = NetworkClient(uri);
-    String response = await client.getData();
-
-    List parsed = jsonDecode(response);
-    List<ExerciseModel> exercises =
-        parsed.map((e) => ExerciseModel.fromJson(e)).toList();
-    setState(() {
-        InMemoryStorage.exercisesByGroup =
-            groupBy(exercises, (ExerciseModel em) => ExerciseModel.capitalize(em.groupName));
-    });
-    var uriSetTypes = Uri.http("localhost:8080", "/api/v1/exercises/sets/type");
-    String responseSetTypes = await NetworkClient(uriSetTypes).getData();
-    List parsedSetTypes = jsonDecode(responseSetTypes);
-
-    setState(() {
-      InMemoryStorage.setTypes = parsedSetTypes.map((e) => e.toString()).toList();
-    });
-
+    DataFetcher.fetchAll();
   }
 
   static const List<Widget> _pages = <Widget>[

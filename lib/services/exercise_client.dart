@@ -14,10 +14,16 @@ class ExerciseClient {
   Future<dynamic> getExercises() async {
     var uri = Uri.http(bathPath, "/api/v1/exercises");
     NetworkClient client = NetworkClient(uri);
-    String response = await client.getData();
+    String response = await client.get();
 
     List parsed = jsonDecode(response);
     List<ExerciseModel> exercises = parsed.map((e) => ExerciseModel.fromJson(e)).toList();
     InMemoryStorage.exercisesByGroup = groupBy(exercises, (ExerciseModel em)=> em.groupName);
+  }
+
+  void createExercise(ExerciseModel exerciseModel) async {
+    var uri = Uri.http(bathPath, "/api/v1/exercises");
+    NetworkClient client = NetworkClient(uri);
+    await client.post(exerciseModel.toRawJson());
   }
 }
