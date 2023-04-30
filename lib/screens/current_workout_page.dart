@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/components/close_alert_dialog.dart';
-import 'package:gym_tracker/components/exercise_set_component.dart';
+import 'package:gym_tracker/components/exercise_set_component_resolver.dart';
 import 'package:gym_tracker/components/padding_elevated_button.dart';
 import 'package:gym_tracker/constants.dart' as constants;
 import 'package:gym_tracker/screens/exercise_categories_page.dart';
@@ -29,6 +29,7 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
           automaticallyImplyLeading: false,
           actions: [
             TextButton(
+                //todo: add logic to save all values to workout model and call backend to persist it in DB.
                 onPressed: () {
                   if (setByExercise.isEmpty) {
                     showDialog(
@@ -84,6 +85,8 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
                     itemBuilder: (context, index) {
                       setByExercise.putIfAbsent(
                           _selectedExercises[index].name, () => []);
+
+                      /// Expansion exercise component with particular sets based on type
                       return ExpansionTile(
                           maintainState: true,
                           expandedCrossAxisAlignment:
@@ -91,6 +94,7 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
                           title: Text(_selectedExercises[index].name),
                           children: [
                             Row(
+                              //todo: make it row change dynamically per exercise setType
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: const [
                                 SizedBox(
@@ -113,6 +117,7 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
                               ],
                             ),
                             Column(
+                              /// Exercise sets
                               children: setByExercise[
                                       _selectedExercises[index].name] ??
                                   [],
@@ -122,12 +127,15 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
                                   setState(() {
                                     var listOfExerciseSets = setByExercise[
                                         _selectedExercises[index].name];
+                                    //todo: add delete set option and implement logic to recalculate setNumbers
                                     if (listOfExerciseSets != null) {
                                       listOfExerciseSets.add(
-                                          ExerciseSetComponent(
-                                              setNumber:
-                                                  listOfExerciseSets.length +
-                                                      1));
+                                          ExerciseSetComponentResolver()
+                                              .resolve(
+                                                  _selectedExercises[index]
+                                                      .setCategoryType,
+                                                  listOfExerciseSets.length + 1)
+                                          );
                                     }
                                   });
                                 },
