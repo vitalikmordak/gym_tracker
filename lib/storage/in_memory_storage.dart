@@ -1,4 +1,4 @@
-import 'package:gym_tracker/services/exercise_model.dart';
+import 'package:gym_tracker/services/dto/exercise_model.dart';
 
 class InMemoryStorage {
 

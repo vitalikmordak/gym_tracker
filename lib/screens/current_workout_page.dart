@@ -4,7 +4,8 @@ import 'package:gym_tracker/components/exercise_set_component_resolver.dart';
 import 'package:gym_tracker/components/padding_elevated_button.dart';
 import 'package:gym_tracker/constants.dart' as constants;
 import 'package:gym_tracker/screens/exercise_categories_page.dart';
-import 'package:gym_tracker/services/exercise_model.dart';
+import 'package:gym_tracker/services/dto/exercise_model.dart';
+import 'package:gym_tracker/services/dto/exercise_set_model.dart';
 
 class CurrentWorkoutPage extends StatefulWidget {
   const CurrentWorkoutPage({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
   final List<ExerciseModel> _selectedExercises = [];
   Map<String, List<ExerciseModel>> _selectedExercisesPerCategory = {};
   Map<String, List<Widget>> setByExercise = {};
+  Map<ExerciseModel, List<ExerciseSetModel>> workout = {};
 
   @override
   Widget build(BuildContext context) {
@@ -130,12 +132,12 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
                                     //todo: add delete set option and implement logic to recalculate setNumbers
                                     if (listOfExerciseSets != null) {
                                       listOfExerciseSets.add(
-                                          ExerciseSetComponentResolver()
+                                          ExerciseSetComponentResolver(
+                                                  _selectedExercises[index],
+                                                  workout)
                                               .resolve(
-                                                  _selectedExercises[index]
-                                                      .setCategoryType,
-                                                  listOfExerciseSets.length + 1)
-                                          );
+                                        listOfExerciseSets.length + 1,
+                                      ));
                                     }
                                   });
                                 },

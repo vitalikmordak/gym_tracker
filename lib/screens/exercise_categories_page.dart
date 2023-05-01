@@ -4,7 +4,7 @@ import 'package:gym_tracker/components/editable_exercise_dialog.dart';
 import 'package:gym_tracker/constants.dart' as constants;
 import 'package:gym_tracker/screens/exercises_page.dart';
 import 'package:gym_tracker/services/data_fetcher.dart';
-import 'package:gym_tracker/services/exercise_model.dart';
+import 'package:gym_tracker/services/dto/exercise_model.dart';
 import 'package:gym_tracker/storage/in_memory_storage.dart';
 
 class ExerciseCategoriesPage extends StatefulWidget {

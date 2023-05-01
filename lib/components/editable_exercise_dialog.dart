@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/components/switched_choice.dart';
 import 'package:gym_tracker/services/exercise_client.dart';
-import 'package:gym_tracker/services/exercise_model.dart';
+import 'package:gym_tracker/services/dto/exercise_model.dart';
 import 'package:gym_tracker/storage/in_memory_storage.dart';
 
 const inputFieldContentPadding =

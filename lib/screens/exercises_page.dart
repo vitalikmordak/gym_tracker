@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/constants.dart' as constants;
-import 'package:gym_tracker/services/exercise_model.dart';
+import 'package:gym_tracker/services/dto/exercise_model.dart';
 
 class ExercisesPage extends StatefulWidget {
   const ExercisesPage({Key? key,

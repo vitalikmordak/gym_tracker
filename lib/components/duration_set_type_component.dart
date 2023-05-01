@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/components/sized_set_type_text_field.dart';
+import 'package:gym_tracker/services/dto/duration_set_model.dart';
+import 'package:gym_tracker/services/dto/exercise_set_model.dart';
+import 'package:intl/intl.dart';
 
 class DurationSetTypeComponent extends StatefulWidget {
   const DurationSetTypeComponent(
-      {Key? key, required this.setNumber, this.onDurationChanged})
+      {Key? key, required this.setNumber, required this.sets})
       : super(key: key);
 
   final int setNumber;
-  final Function(String)? onDurationChanged;
+  final List<ExerciseSetModel> sets;
 
   @override
   State<DurationSetTypeComponent> createState() =>
@@ -16,8 +19,11 @@ class DurationSetTypeComponent extends StatefulWidget {
 }
 
 class _DurationSetTypeComponentState extends State<DurationSetTypeComponent> {
-  TextEditingController timeinput = TextEditingController();
-  Duration duration = const Duration(hours: 0, minutes: 0, seconds: 0);
+  TextEditingController durationController = TextEditingController();
+  late DurationSetModel durationSetModel;
+
+  /// Default displayed duration for time picker
+  Duration initialDuration = const Duration(hours: 0, minutes: 0, seconds: 0);
 
   // This shows a CupertinoModalPopup with a reasonable fixed height which hosts
   // a CupertinoTimerPicker.
@@ -43,6 +49,18 @@ class _DurationSetTypeComponentState extends State<DurationSetTypeComponent> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    /// Creates DurationSetModel and set value later
+    durationSetModel = DurationSetModel(
+        setNumber: widget.setNumber, duration: initialDuration);
+
+    /// Use insert in list to avoid duplication
+    widget.sets.insert(widget.setNumber - 1, durationSetModel);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
@@ -61,21 +79,28 @@ class _DurationSetTypeComponentState extends State<DurationSetTypeComponent> {
           ),
           SizedSetTypeTextField(
             keyboardType: TextInputType.none,
-            controller: timeinput,
-            onTextFieldChanged: widget.onDurationChanged,
+            controller: durationController,
             onTextFieldTap: () async {
               _showDialog(
                 CupertinoTimerPicker(
                   mode: CupertinoTimerPickerMode.hms,
-                  initialTimerDuration: duration,
+                  initialTimerDuration: initialDuration,
                   // This is called when the user changes the timer's
                   // duration.
                   onTimerDurationChanged: (Duration newDuration) {
                     setState(() {
-                      duration = newDuration;
+                      initialDuration = newDuration;
                       // return in format HH:mm:ss
-                      timeinput.text =
-                          duration.toString().split('.').first.padLeft(8, "0");
+                      durationController.text = initialDuration
+                          .toString()
+                          .split('.')
+                          .first
+                          .padLeft(8, "0");
+
+                      /// Save specified duration as set to workout object
+                      (widget.sets[widget.sets.indexOf(durationSetModel)]
+                              as DurationSetModel)
+                          .duration = parse(durationController.text);
                     });
                   },
                 ),
@@ -85,5 +110,10 @@ class _DurationSetTypeComponentState extends State<DurationSetTypeComponent> {
         ],
       ),
     );
+  }
+
+  Duration parse(String duration) {
+    final ts = DateFormat('HH:mm:ss').parse(duration);
+    return Duration(hours: ts.hour, minutes: ts.minute, seconds: ts.second);
   }
 }

@@ -21,6 +21,7 @@ class SizedSetTypeTextField extends StatelessWidget {
     return SizedBox(
       width: 150,
       child: TextField(
+        autocorrect: false,
         controller: controller,
         textAlign: TextAlign.center,
         textAlignVertical: TextAlignVertical.center,

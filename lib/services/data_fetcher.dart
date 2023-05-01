@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import '../storage/in_memory_storage.dart';
-import 'exercise_model.dart';
+import 'dto/exercise_model.dart';
 import 'networking_client.dart';
 import 'package:collection/collection.dart';
 
