@@ -41,7 +41,9 @@ class CloseAlertDialog extends StatelessWidget {
           child: ElevatedButton(
             style: actionButtonStyle,
             onPressed: () {
-              actionButtonOnPressed;
+              if(actionButtonOnPressed != null) {
+                actionButtonOnPressed!.call();
+              }
               // Close firstly alert dialog, then bottom modal sheet
               Navigator.pop(context);
               Navigator.pop(context);

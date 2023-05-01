@@ -6,6 +6,7 @@ import 'package:gym_tracker/constants.dart' as constants;
 import 'package:gym_tracker/screens/exercise_categories_page.dart';
 import 'package:gym_tracker/services/dto/exercise_model.dart';
 import 'package:gym_tracker/services/dto/exercise_set_model.dart';
+import 'package:gym_tracker/services/workout_client.dart';
 
 class CurrentWorkoutPage extends StatefulWidget {
   const CurrentWorkoutPage({Key? key}) : super(key: key);
@@ -31,7 +32,6 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
           automaticallyImplyLeading: false,
           actions: [
             TextButton(
-                //todo: add logic to save all values to workout model and call backend to persist it in DB.
                 onPressed: () {
                   if (setByExercise.isEmpty) {
                     showDialog(
@@ -60,6 +60,10 @@ class _CurrentWorkoutPageState extends State<CurrentWorkoutPage> {
                             actionButtonStyle: ElevatedButton.styleFrom(
                               backgroundColor: Colors.green.shade400,
                             ),
+                            actionButtonOnPressed: () {
+                              /// Call backend to persist Workout
+                              WorkoutClient().createWorkout(workout);
+                            },
                           );
                         });
                   }
