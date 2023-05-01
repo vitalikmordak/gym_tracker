@@ -16,12 +16,12 @@ class DurationSetModel with ExerciseSetModel {
   factory DurationSetModel.fromJson(Map<String, dynamic> json) =>
       DurationSetModel(
           setNumber: json['setNumber'],
-          duration: json['duration']
+          duration: Duration(milliseconds: json['duration'])
       );
 
   Map<String, dynamic> toJson() => {
     "setNumber": setNumber,
-    "duration": duration,
+    "duration": duration.inMilliseconds,
   };
 
 }

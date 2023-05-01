@@ -6,11 +6,11 @@ class CardioSetModel with ExerciseSetModel {
   Duration duration;
   double distanceInKm;
 
-  CardioSetModel(
-      {required this.setNumber,
-       required this.duration,
-       this.distanceInKm = 0,
-      });
+  CardioSetModel({
+    required this.setNumber,
+    required this.duration,
+    this.distanceInKm = 0,
+  });
 
   factory CardioSetModel.fromRawJson(String str) =>
       CardioSetModel.fromJson(json.decode(str));
@@ -20,11 +20,11 @@ class CardioSetModel with ExerciseSetModel {
   factory CardioSetModel.fromJson(Map<String, dynamic> json) => CardioSetModel(
       setNumber: json['setNumber'],
       distanceInKm: json['distanceInKm'],
-      duration: json['duration']);
+      duration: Duration(milliseconds: json['duration']));
 
   Map<String, dynamic> toJson() => {
         "setNumber": setNumber,
         "distanceInKm": distanceInKm,
-        "duration": duration,
+        "duration": duration.inMilliseconds,
       };
 }
